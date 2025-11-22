@@ -1,3 +1,154 @@
+# Init Orchestrator - Comprehensive Greenfield Project Initialization
+
+## Overview
+
+The **Init Orchestrator** (`/init-orchestrator`) is designed for **comprehensive greenfield project initialization** with full codebase analysis, intelligent tech stack detection, and coordinated multi-specialist execution.
+
+## When to Use This Command
+
+### ✅ Use `/init-orchestrator` for:
+
+- **Greenfield projects**: Building entire applications from scratch
+- **Large-scale features**: Multi-domain features requiring comprehensive planning
+- **Project bootstrapping**: Setting up new projects with proper architecture
+- **Complex migrations**: Refactoring or rebuilding major system components
+- **Full system analysis**: When you need deep understanding of project requirements
+
+**Example use cases:**
+```bash
+/init-orchestrator build a marketplace app with user authentication, product catalog, and payment processing
+/init-orchestrator create a real-time chat application with mobile support
+/init-orchestrator bootstrap a microservices architecture for e-commerce
+```
+
+### ❌ Use `/orchestrator` instead for:
+
+- **Focused tasks**: Adding specific features to existing modules
+- **Bug fixes**: Fixing issues in specific files
+- **Simple modifications**: Updating configurations or styles
+- **Incremental features**: Adding functionality to established projects
+
+**Example use cases:**
+```bash
+/orchestrator add pagination to the users table component
+/orchestrator fix the login validation bug in auth.service.ts
+/orchestrator update the primary color in tailwind config
+```
+
+## Key Differences
+
+| Feature | `/init-orchestrator` | `/orchestrator` |
+|---------|---------------------|-----------------|
+| **Scope** | Comprehensive project analysis | Minimal, task-focused scanning |
+| **Scanning** | Full tech stack detection | Only mentioned files + dependencies |
+| **Planning** | Multi-phase with all specialists | Focused plan for specific task |
+| **Use Case** | Greenfield, large features | Focused tasks, bug fixes |
+| **Complexity** | Handles 4+ domain specialists | Typically 1-2 specialists |
+| **Speed** | Thorough but slower | Fast and focused |
+
+## Configuration Schema
+
+This file contains a JSON configuration that drives the Init Orchestrator behavior:
+
+### Main Sections
+
+1. **`context_detection`**: Auto-detects project characteristics
+   - Scans for framework patterns (Next.js, Django, etc.)
+   - Identifies tech stack from config files
+   - Infers project structure and complexity
+
+2. **`droid_selection`**: Intelligently selects specialist droids
+   - Auto-ranks droids based on project needs
+   - Uses historical success rates (learning weight: 0.3)
+   - Provides fallback strategies when specialists unavailable
+
+3. **`core_logic`**: Defines the execution workflow
+   - Discover → Understand → Plan → Execute
+   - Adaptive execution strategies (sequential/parallel/hybrid)
+   - Proactive issue resolution for common patterns
+
+4. **`learning`**: Continuous improvement system
+   - Tracks success patterns across projects
+   - Learns from failures to avoid repeating mistakes
+   - Adapts prompts based on historical performance
+
+5. **`prompt_enhancement`**: Context enrichment
+   - Automatically includes best practices
+   - Injects security and performance guidelines
+   - Adds framework-specific recommendations
+
+6. **`execution_flow`**: Step-by-step process
+   - 7-step comprehensive workflow
+   - Factory-managed parallel specialist execution
+   - Autonomous continuation until completion
+
+## How to Adapt This Configuration
+
+### For Specific Project Types
+
+**Frontend-Heavy Projects:**
+- Increase weight for `frontend-developer`, `ui-ux-designer`
+- Add framework-specific scan patterns (e.g., `vite.config.js`, `angular.json`)
+
+**Backend-Heavy Projects:**
+- Prioritize `backend-architect`, `database-admin`
+- Add API-specific patterns (e.g., `swagger.yaml`, `graphql.schema`)
+
+**Microservices:**
+- Enable `devops-specialist`, `kubernetes-architect`
+- Add container patterns (e.g., `docker-compose.yml`, `k8s/*.yaml`)
+
+### Modifying Execution Strategy
+
+Edit `core_logic.execution_strategy.adaptation_rules`:
+```json
+"adaptation_rules": {
+  "high_complexity": "sequential_with_checkpoints",  // More control
+  "low_risk": "parallel_execution",                  // Faster
+  "mixed_dependencies": "hybrid_strategy"            // Balanced
+}
+```
+
+### Adjusting Learning Weight
+
+Modify `droid_selection.learning_weight` (0.0 to 1.0):
+- **0.0**: Pure pattern matching, no historical learning
+- **0.3** (default): Balanced - 70% current match, 30% history
+- **1.0**: Full reliance on historical success rates
+
+## Memory System Integration
+
+The Init Orchestrator leverages persistent memory for continuous improvement:
+
+- **Success Patterns**: `$HOME/.factory/orchestrator/memory/success_patterns.json`
+- **Failure Patterns**: `$HOME/.factory/orchestrator/memory/failure_patterns.json`
+- **Project Templates**: `$HOME/.factory/orchestrator/memory/project_templates.json`
+- **Learning Metrics**: `$HOME/.factory/orchestrator/memory/learning_metrics.json`
+
+These files are automatically read during initialization and updated after project completion.
+
+## Example Workflow
+
+When you run `/init-orchestrator build a SaaS application`:
+
+1. **Discovery**: Scans for existing files, detects tech stack
+2. **Understanding**: Analyzes requirements, identifies domains (auth, billing, frontend)
+3. **Planning**: Creates comprehensive multi-phase plan with specialist assignments
+4. **Execution**: Coordinates 4+ specialists in parallel/sequential phases:
+   - Backend Architect: API design, database schema
+   - Frontend Developer: UI components, user flows
+   - Security Auditor: Auth flows, data protection
+   - Payment Integration: Billing system, subscription management
+5. **Synthesis**: Integrates all work into cohesive application
+6. **Learning**: Updates memory with patterns that worked
+
+---
+
+## Configuration JSON
+
+The configuration below defines the complete behavior of the Init Orchestrator:
+
+```json
 {
   "command": "orchestrator",
   "action": "invoke_droid",
@@ -13,7 +164,7 @@
   "context_detection": {
     "scan_patterns": [
       "package.json:frontend_frameworks",
-      "requirements.txt:python_frameworks", 
+      "requirements.txt:python_frameworks",
       "Dockerfile:containerization",
       "*.sql:database_schema",
       "src/:project_structure",
@@ -29,7 +180,7 @@
     "auto_rank": true,
     "criteria": [
       "project_complexity",
-      "tech_stack_match", 
+      "tech_stack_match",
       "dependency_analysis",
       "expertise_level",
       "success_history"
@@ -63,7 +214,7 @@
       "auto_optimize": true,
       "factors": [
         "dependency_graph",
-        "parallel_potential", 
+        "parallel_potential",
         "risk_assessment",
         "resource_availability"
       ],
@@ -125,7 +276,7 @@
     "auto_context": true,
     "include_patterns": [
       "similar_projects",
-      "best_practices", 
+      "best_practices",
       "security_considerations",
       "performance_guidelines",
       "industry_standards",
@@ -216,3 +367,4 @@
     "Continuous autonomous execution"
   ]
 }
+```
