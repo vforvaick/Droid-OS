@@ -120,6 +120,30 @@ Droids autonomously select and apply methodologies like:
 
 **See:** `docs/SKILLS-USAGE.md` for complete guide
 
+### **Slash Commands for Key Skills** 🆕
+
+Three core skills are available as quick-access slash commands:
+
+**`/brainstorm`** - Interactive design refinement
+- Transform rough ideas into fully-formed designs
+- Socratic method with one question at a time
+- Multiple-choice options when possible
+- **Use when:** Requirements are unclear or need exploration
+
+**`/write-plan`** - Create implementation plan
+- Break features into bite-sized tasks (2-5 minutes each)
+- Exact file paths and complete code examples
+- TDD approach with verification steps
+- **Use when:** Design is finalized, ready for implementation
+
+**`/execute-plan`** - Execute plan in batches
+- Process first three tasks, then pause for review
+- Fresh verification and empirical evidence required
+- Allows feedback between batches, not after completion
+- **Use when:** Have complete plan ready for execution
+
+These commands provide structured workflows inspired by the [obra/superpowers](https://github.com/obra/superpowers) methodology.
+
 ### **Continuous Learning**
 - Tracks success patterns and learns from failures
 - Updates knowledge base with each project
@@ -652,3 +676,76 @@ This mirrors the former automated flow but relies on human coordination.
 ├── tasks/                           # Research/planning/verification artifacts per task
 └── …                                # Supporting config/history files
 ```
+
+---
+
+## 🙏 Acknowledgments & Attribution
+
+This project stands on the shoulders of giants. We are deeply grateful to the creators and maintainers of the foundational repositories that inspired and shaped Droid-OS:
+
+### **[obra/superpowers](https://github.com/obra/superpowers)** by Jesse Vincent & Contributors
+
+The Superpowers repository revolutionized AI-assisted development by providing proven methodologies that make coding assistants more systematic and effective. This project integrates all 20 skills from Superpowers, including:
+
+- **Core Philosophy**: "If you didn't watch the test fail, you don't know if it tests the right thing" - emphasizing TDD and empirical verification
+- **Structured Workflows**: Brainstorming, planning, and execution methodologies that transform rough ideas into production code
+- **Discipline-Enforcing Patterns**: Skills that ensure quality even under pressure
+- **Community-Driven Excellence**: Proven techniques refined through real-world usage
+
+**Our Gratitude**: Thank you for creating a skills system that elevates AI coding from "helpful" to "systematic." Your emphasis on TDD, root-cause debugging, and verification-before-completion has become the foundation of quality in Droid-OS. The brainstorming skill alone has prevented countless over-engineered solutions.
+
+**License**: MIT License
+**Contributors**: Jesse Vincent (@obra), Roland Huß, Ryan Nelson, Dave Seleno, and the Superpowers community
+
+---
+
+### **[aeitroc/Droid-CLI-Orchestrator](https://github.com/aeitroc/Droid-CLI-Orchestrator)** by aeitroc
+
+The Droid CLI Orchestrator pioneered the concept of intelligent multi-agent coordination with specialized AI droids. This project inherits and extends the orchestration architecture, including:
+
+- **Intelligent Orchestration**: Smart project analysis, adaptive execution strategies, and automated specialist selection
+- **Droid Specialization**: 100+ specialist agents for every domain from backend to security to DevOps
+- **Learning Systems**: Knowledge management that improves with every project
+- **Structured Task Management**: Research → Plan → Execute → Verify workflow
+
+**Our Gratitude**: Thank you for envisioning a future where AI agents don't just assist but orchestrate complex multi-domain projects with intelligence and autonomy. Your architecture of specialized droids coordinated by a smart orchestrator has unlocked capabilities beyond what any single AI agent could achieve. The task tracking structure and quality gates you designed ensure nothing falls through the cracks.
+
+**License**: MIT License
+**Project Stats**: 179 stars, 22 forks - a testament to community recognition of brilliant design
+
+---
+
+### **What Droid-OS Adds**
+
+Building on these excellent foundations, Droid-OS integrates:
+
+- ✨ **Unified Skills System**: All 20 Superpowers skills accessible to all 104 droids
+- 🎯 **Self-Organizing Pattern**: Droids autonomously select relevant methodologies based on task context
+- ⚡ **Quick Access Slash Commands**: `/brainstorm`, `/write-plan`, `/execute-plan` for instant workflow activation
+- 🔄 **Skills-Aware Orchestration**: Orchestrator delegates with skill recommendations, specialists self-select workflows
+- 📚 **Reference Documentation Pattern**: Skills as readable methodologies, not rigid invocations
+- 🎓 **Cross-Project Learning**: Knowledge base that improves orchestration strategy over time
+
+---
+
+### **Standing Together**
+
+Both obra/superpowers and aeitroc/Droid-CLI-Orchestrator represent the cutting edge of AI-assisted development:
+
+- **Superpowers** gave us the *what* - proven methodologies for systematic development
+- **Droid-CLI-Orchestrator** gave us the *how* - intelligent multi-agent coordination architecture
+- **Droid-OS** brings them together - skills-aware orchestration at scale
+
+To the maintainers, contributors, and communities of both projects: **Thank you for your vision, your code, and your generosity in sharing it with the MIT License.** This project exists because you made it possible.
+
+---
+
+## 📄 License
+
+Like our inspirations, Droid-OS is released under the **MIT License**, continuing the tradition of open collaboration and community-driven improvement.
+
+**MIT License** - Free to use, modify, and distribute. See LICENSE file for details.
+
+---
+
+**🚀 Built with respect, gratitude, and the collective wisdom of the AI development community.**
