@@ -236,7 +236,19 @@ if [[ "$VERBOSE" == true ]]; then
 
                 if [[ "$AUTO_FIX" == true ]]; then
                     echo "    ${YELLOW}→${NC} Creating $file"
-                    echo '{"data": [], "last_updated": "'$(date -Iseconds)'"}' > "$MEMORY_DIR/$file"
+                    # Use portable date format and correct JSON structure
+                    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                    case "$file" in
+                        success_patterns.json|failure_patterns.json)
+                            echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/$file"
+                            ;;
+                        project_templates.json)
+                            echo "{\"templates\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/$file"
+                            ;;
+                        learning_metrics.json)
+                            echo "{\"metrics\": {}, \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/$file"
+                            ;;
+                    esac
                     echo -e "    ${GREEN}✓${NC} Created"
                 fi
             fi
@@ -249,9 +261,12 @@ if [[ "$VERBOSE" == true ]]; then
         if [[ "$AUTO_FIX" == true ]]; then
             echo -e "    ${YELLOW}→${NC} Initializing memory system"
             mkdir -p "$MEMORY_DIR"
-            for file in success_patterns.json failure_patterns.json project_templates.json learning_metrics.json; do
-                echo '{"data": [], "last_updated": "'$(date -Iseconds)'"}' > "$MEMORY_DIR/$file"
-            done
+            # Use portable date format and correct JSON structure
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/success_patterns.json"
+            echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/failure_patterns.json"
+            echo "{\"templates\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/project_templates.json"
+            echo "{\"metrics\": {}, \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/learning_metrics.json"
             echo -e "    ${GREEN}✓${NC} Memory system initialized"
         fi
     fi
@@ -276,11 +291,17 @@ if [[ "$VERBOSE" == true ]]; then
             echo -e "  ${BLUE}ℹ${NC} Remote: $REMOTE"
         fi
 
-        # Check if up to date
-        git fetch --dry-run 2>&1 | grep -q "Everything up-to-date" && UP_TO_DATE=true || UP_TO_DATE=false
-
-        if [[ "$UP_TO_DATE" == true ]]; then
-            echo -e "  ${GREEN}✓${NC} Up to date with remote"
+        # Check if up to date (if tracking branch exists)
+        if git rev-parse @{u} > /dev/null 2>&1; then
+            # Fetch quietly to get latest remote state
+            git fetch --quiet 2>/dev/null || true
+            # Count commits behind remote
+            BEHIND=$(git rev-list HEAD..@{u} --count 2>/dev/null || echo "0")
+            if [[ "$BEHIND" -eq 0 ]]; then
+                echo -e "  ${GREEN}✓${NC} Up to date with remote"
+            else
+                echo -e "  ${YELLOW}⚠${NC} $BEHIND commit(s) behind remote"
+            fi
         fi
     else
         echo -e "  ${BLUE}ℹ${NC} Not a git repository (optional)"

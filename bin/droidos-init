@@ -21,7 +21,7 @@ CURRENT_DIR="$(pwd)"
 echo ""
 echo -e "${BLUE}${BOLD}╔════════════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}${BOLD}║     🤖 Droid-OS Interactive Setup Wizard     ║${NC}"
-echo -e "${BLUE}${BOLD}╔════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}${BOLD}╚════════════════════════════════════════════════╝${NC}"
 echo ""
 
 # Detect project directory
@@ -279,8 +279,24 @@ setup_directory() {
     local mode=$3
     local name=$4
 
-    # Remove existing if present
+    # Remove existing if present (with safety checks)
     if [[ -e "$target" ]] || [[ -L "$target" ]]; then
+        # Safety validation before removal
+        if [[ -z "$target" ]] || [[ "$target" == "/" ]] || [[ "$target" == "$HOME" ]] || [[ "$target" == "$HOME/" ]]; then
+            echo -e "  ${RED}✗${NC} Unsafe removal path detected: $target"
+            echo -e "  ${RED}Aborting for safety${NC}"
+            exit 1
+        fi
+
+        # Ensure target is within current directory
+        local target_abs=$(cd "$(dirname "$target")" 2>/dev/null && pwd)/$(basename "$target")
+        local current_abs=$(pwd)
+        if [[ "$target_abs" != "$current_abs"* ]]; then
+            echo -e "  ${RED}✗${NC} Target path outside current directory: $target"
+            echo -e "  ${RED}Aborting for safety${NC}"
+            exit 1
+        fi
+
         echo -e "  ${YELLOW}→${NC} Removing existing $name"
         rm -rf "$target"
     fi
@@ -332,20 +348,23 @@ if [[ "$MEMORY_ENABLED" == "yes" ]]; then
     mkdir -p "$MEMORY_DIR"
 
     # Create memory files if they don't exist
+    # Use portable date format (works on both GNU and BSD/macOS)
+    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
     if [[ ! -f "$MEMORY_DIR/success_patterns.json" ]]; then
-        echo '{"patterns": [], "last_updated": "'$(date -Iseconds)'"}' > "$MEMORY_DIR/success_patterns.json"
+        echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/success_patterns.json"
     fi
 
     if [[ ! -f "$MEMORY_DIR/failure_patterns.json" ]]; then
-        echo '{"patterns": [], "last_updated": "'$(date -Iseconds)'"}' > "$MEMORY_DIR/failure_patterns.json"
+        echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/failure_patterns.json"
     fi
 
     if [[ ! -f "$MEMORY_DIR/project_templates.json" ]]; then
-        echo '{"templates": [], "last_updated": "'$(date -Iseconds)'"}' > "$MEMORY_DIR/project_templates.json"
+        echo "{\"templates\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/project_templates.json"
     fi
 
     if [[ ! -f "$MEMORY_DIR/learning_metrics.json" ]]; then
-        echo '{"metrics": {}, "last_updated": "'$(date -Iseconds)'"}' > "$MEMORY_DIR/learning_metrics.json"
+        echo "{\"metrics\": {}, \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/learning_metrics.json"
     fi
 
     echo -e "${GREEN}✓${NC} Memory system initialized at $MEMORY_DIR"
