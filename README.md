@@ -100,6 +100,26 @@ The orchestrator will:
 - Implements security-first approaches for sensitive features
 - Suggests performance optimizations early
 
+### **Skills System** 🆕
+- **20 proven methodologies** integrated across all droids
+- **Self-organizing skill selection** - droids choose relevant workflows
+- **Systematic approaches** to testing, debugging, and collaboration
+- **No manual coordination** - skills invoked automatically based on context
+
+**Available skill categories:**
+- 🧪 **Testing**: TDD, condition-based-waiting, anti-patterns (3 skills)
+- 🐛 **Debugging**: Systematic debugging, root-cause tracing, verification, defense-in-depth (4 skills)
+- 🤝 **Collaboration**: Brainstorming, planning, executing, code review, git workflows (9 skills)
+- 🔧 **Meta**: Writing skills, sharing skills, testing skills (4 skills)
+
+Droids autonomously select and apply methodologies like:
+- `test-driven-development` when implementing features
+- `systematic-debugging` when stuck >10min
+- `brainstorming` when requirements are unclear
+- `verification-before-completion` before claiming work done
+
+**See:** `docs/SKILLS-USAGE.md` for complete guide
+
 ### **Continuous Learning**
 - Tracks success patterns and learns from failures
 - Updates knowledge base with each project
