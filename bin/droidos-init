@@ -455,7 +455,7 @@ if [[ $ERRORS -eq 0 ]]; then
 
     echo ""
     echo -e "  ${BOLD}Check installation health:${NC}"
-    echo -e "    droid-doctor"
+    echo -e "    droidos-doctor"
     echo ""
     echo -e "  ${BOLD}View configuration:${NC}"
     echo -e "    cat .droidrc"

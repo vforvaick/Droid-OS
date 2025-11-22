@@ -15,7 +15,7 @@ Complete orchestration system with intelligent planning, adaptive execution, and
 cd /path/to/your/project
 
 # Run the interactive installer
-/path/to/Droid-OS/bin/droid-init
+/path/to/Droid-OS/bin/droidos-init
 ```
 
 The installer will guide you through:
@@ -28,10 +28,10 @@ The installer will guide you through:
 
 ```bash
 # Check installation health
-/path/to/Droid-OS/bin/droid-doctor
+/path/to/Droid-OS/bin/droidos-doctor
 
 # View detailed status (optional)
-/path/to/Droid-OS/bin/droid-doctor --verbose
+/path/to/Droid-OS/bin/droidos-doctor --verbose
 ```
 
 ### 3. Start Orchestrating
