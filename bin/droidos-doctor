@@ -1,0 +1,393 @@
+#!/bin/bash
+# Droid-OS Health Check Tool
+# Verifies installation and provides diagnostics
+
+set -e
+
+# Colors
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+BOLD='\033[1m'
+
+CURRENT_DIR="$(pwd)"
+VERBOSE=false
+AUTO_FIX=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --verbose|-v)
+            VERBOSE=true
+            shift
+            ;;
+        --fix|-f)
+            AUTO_FIX=true
+            shift
+            ;;
+        --help|-h)
+            echo "Droid-OS Health Check"
+            echo ""
+            echo "Usage: droidos-doctor [options]"
+            echo ""
+            echo "Options:"
+            echo "  --verbose, -v    Show detailed information"
+            echo "  --fix, -f        Automatically fix common issues"
+            echo "  --help, -h       Show this help message"
+            echo ""
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+# Banner
+echo ""
+echo -e "${BLUE}${BOLD}╔════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}${BOLD}║      🏥 Droid-OS Health Check                 ║${NC}"
+echo -e "${BLUE}${BOLD}╚════════════════════════════════════════════════╝${NC}"
+echo ""
+
+WARNINGS=0
+ERRORS=0
+SUGGESTIONS=()
+
+# ============================================
+# Check 1: Directory Structure
+# ============================================
+echo -e "${BOLD}📁 Directory Structure:${NC}"
+
+if [[ -d "$CURRENT_DIR/droids" ]]; then
+    if [[ -L "$CURRENT_DIR/droids" ]]; then
+        TARGET=$(readlink "$CURRENT_DIR/droids")
+        if [[ -d "$TARGET" ]]; then
+            DROID_COUNT=$(find "$CURRENT_DIR/droids" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+            echo -e "  ${GREEN}✓${NC} droids/ exists (symlink → $TARGET, $DROID_COUNT specialists)"
+        else
+            echo -e "  ${RED}✗${NC} droids/ symlink broken (points to: $TARGET)"
+            ((ERRORS++))
+            if [[ "$AUTO_FIX" == true ]]; then
+                echo -e "    ${YELLOW}→${NC} Attempting to fix..."
+                rm "$CURRENT_DIR/droids"
+                SUGGESTIONS+=("Run 'droidos-init' to reinstall droids/")
+            fi
+        fi
+    else
+        DROID_COUNT=$(find "$CURRENT_DIR/droids" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+        echo -e "  ${GREEN}✓${NC} droids/ exists (copied, $DROID_COUNT specialists)"
+    fi
+else
+    echo -e "  ${RED}✗${NC} droids/ directory missing"
+    ((ERRORS++))
+    SUGGESTIONS+=("Run 'droidos-init' to install Droid-OS")
+fi
+
+if [[ -d "$CURRENT_DIR/orchestrator" ]]; then
+    if [[ -L "$CURRENT_DIR/orchestrator" ]]; then
+        TARGET=$(readlink "$CURRENT_DIR/orchestrator")
+        if [[ -d "$TARGET" ]]; then
+            echo -e "  ${GREEN}✓${NC} orchestrator/ exists (symlink → $TARGET)"
+        else
+            echo -e "  ${RED}✗${NC} orchestrator/ symlink broken (points to: $TARGET)"
+            ((ERRORS++))
+        fi
+    else
+        echo -e "  ${GREEN}✓${NC} orchestrator/ exists (copied)"
+    fi
+else
+    echo -e "  ${RED}✗${NC} orchestrator/ directory missing"
+    ((ERRORS++))
+    SUGGESTIONS+=("Run 'droidos-init' to install Droid-OS")
+fi
+
+if [[ -d "$CURRENT_DIR/commands" ]]; then
+    echo -e "  ${GREEN}✓${NC} commands/ exists"
+else
+    echo -e "  ${YELLOW}⚠${NC} commands/ directory missing (optional)"
+    ((WARNINGS++))
+fi
+
+echo ""
+
+# ============================================
+# Check 2: Required Files
+# ============================================
+echo -e "${BOLD}📋 Required Files:${NC}"
+
+if [[ -f "$CURRENT_DIR/droids/orchestrator.md" ]]; then
+    echo -e "  ${GREEN}✓${NC} droids/orchestrator.md exists"
+else
+    echo -e "  ${RED}✗${NC} droids/orchestrator.md missing"
+    ((ERRORS++))
+fi
+
+if [[ -d "$CURRENT_DIR/commands" ]]; then
+    if [[ -f "$CURRENT_DIR/commands/orchestrator.md" ]]; then
+        echo -e "  ${GREEN}✓${NC} commands/orchestrator.md exists"
+    else
+        echo -e "  ${YELLOW}⚠${NC} commands/orchestrator.md missing"
+        ((WARNINGS++))
+    fi
+
+    if [[ -f "$CURRENT_DIR/commands/init-orchestrator.md" ]]; then
+        echo -e "  ${GREEN}✓${NC} commands/init-orchestrator.md exists"
+    else
+        echo -e "  ${YELLOW}⚠${NC} commands/init-orchestrator.md missing"
+        ((WARNINGS++))
+    fi
+fi
+
+if [[ -f "$CURRENT_DIR/.droidrc" ]]; then
+    echo -e "  ${GREEN}✓${NC} .droidrc configuration exists"
+
+    if [[ "$VERBOSE" == true ]]; then
+        echo ""
+        echo -e "  ${BLUE}Configuration:${NC}"
+        while IFS='=' read -r key value; do
+            [[ -z "$key" || "$key" =~ ^# ]] && continue
+            echo -e "    ${key}: ${BOLD}${value}${NC}"
+        done < "$CURRENT_DIR/.droidrc"
+    fi
+else
+    echo -e "  ${YELLOW}⚠${NC} .droidrc configuration missing"
+    ((WARNINGS++))
+    SUGGESTIONS+=("Run 'droidos-init' to create configuration")
+
+    if [[ "$AUTO_FIX" == true ]]; then
+        echo -e "    ${YELLOW}→${NC} Creating default .droidrc"
+        cat > "$CURRENT_DIR/.droidrc" << EOF
+# Droid-OS Project Configuration
+# Generated by droidos-doctor on $(date)
+
+project_type=generic
+install_mode=Unknown
+memory_enabled=no
+commands_enabled=no
+EOF
+        echo -e "    ${GREEN}✓${NC} Created default configuration"
+    fi
+fi
+
+echo ""
+
+# ============================================
+# Check 3: Installation Mode
+# ============================================
+echo -e "${BOLD}🔗 Installation Mode:${NC}"
+
+if [[ -L "$CURRENT_DIR/droids" ]] && [[ -L "$CURRENT_DIR/orchestrator" ]]; then
+    echo -e "  ${GREEN}✓${NC} Mode: Symlink (shared, auto-updates)"
+elif [[ ! -L "$CURRENT_DIR/droids" ]] && [[ ! -L "$CURRENT_DIR/orchestrator" ]]; then
+    echo -e "  ${GREEN}✓${NC} Mode: Copy (isolated)"
+elif [[ -L "$CURRENT_DIR/droids" ]] && [[ ! -L "$CURRENT_DIR/orchestrator" ]]; then
+    echo -e "  ${GREEN}✓${NC} Mode: Hybrid (droids symlinked, configs copied)"
+else
+    echo -e "  ${YELLOW}⚠${NC} Mode: Mixed (unusual configuration)"
+    ((WARNINGS++))
+fi
+
+# Validate symlinks
+if [[ -L "$CURRENT_DIR/droids" ]]; then
+    TARGET=$(readlink "$CURRENT_DIR/droids")
+    if [[ ! -d "$TARGET" ]]; then
+        echo -e "  ${RED}✗${NC} Broken symlink: droids/ → $TARGET"
+        ((ERRORS++))
+    fi
+fi
+
+if [[ -L "$CURRENT_DIR/orchestrator" ]]; then
+    TARGET=$(readlink "$CURRENT_DIR/orchestrator")
+    if [[ ! -d "$TARGET" ]]; then
+        echo -e "  ${RED}✗${NC} Broken symlink: orchestrator/ → $TARGET"
+        ((ERRORS++))
+    fi
+fi
+
+echo ""
+
+# ============================================
+# Check 4: Memory System (if verbose)
+# ============================================
+if [[ "$VERBOSE" == true ]]; then
+    echo -e "${BOLD}🧠 Memory System:${NC}"
+
+    MEMORY_DIR="${HOME}/.factory/orchestrator/memory"
+
+    if [[ -d "$MEMORY_DIR" ]]; then
+        echo -e "  ${GREEN}✓${NC} Memory directory exists: $MEMORY_DIR"
+
+        for file in success_patterns.json failure_patterns.json project_templates.json learning_metrics.json; do
+            if [[ -f "$MEMORY_DIR/$file" ]]; then
+                SIZE=$(stat -f%z "$MEMORY_DIR/$file" 2>/dev/null || stat -c%s "$MEMORY_DIR/$file" 2>/dev/null)
+                if [[ $SIZE -gt 100 ]]; then
+                    echo -e "  ${GREEN}✓${NC} $file exists (${SIZE} bytes)"
+                else
+                    echo -e "  ${YELLOW}⚠${NC} $file exists but empty (normal for new installations)"
+                fi
+            else
+                echo -e "  ${YELLOW}⚠${NC} $file missing"
+                ((WARNINGS++))
+
+                if [[ "$AUTO_FIX" == true ]]; then
+                    echo "    ${YELLOW}→${NC} Creating $file"
+                    # Use portable date format and correct JSON structure
+                    TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                    case "$file" in
+                        success_patterns.json|failure_patterns.json)
+                            echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/$file"
+                            ;;
+                        project_templates.json)
+                            echo "{\"templates\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/$file"
+                            ;;
+                        learning_metrics.json)
+                            echo "{\"metrics\": {}, \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/$file"
+                            ;;
+                    esac
+                    echo -e "    ${GREEN}✓${NC} Created"
+                fi
+            fi
+        done
+    else
+        echo -e "  ${YELLOW}⚠${NC} Memory system not initialized"
+        ((WARNINGS++))
+        SUGGESTIONS+=("Enable memory system: droidos-init --memory")
+
+        if [[ "$AUTO_FIX" == true ]]; then
+            echo -e "    ${YELLOW}→${NC} Initializing memory system"
+            mkdir -p "$MEMORY_DIR"
+            # Use portable date format and correct JSON structure
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/success_patterns.json"
+            echo "{\"patterns\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/failure_patterns.json"
+            echo "{\"templates\": [], \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/project_templates.json"
+            echo "{\"metrics\": {}, \"last_updated\": \"$TIMESTAMP\"}" > "$MEMORY_DIR/learning_metrics.json"
+            echo -e "    ${GREEN}✓${NC} Memory system initialized"
+        fi
+    fi
+
+    echo ""
+fi
+
+# ============================================
+# Check 5: Git Integration (if verbose)
+# ============================================
+if [[ "$VERBOSE" == true ]]; then
+    echo -e "${BOLD}🔌 Git Integration:${NC}"
+
+    if git rev-parse --git-dir > /dev/null 2>&1; then
+        echo -e "  ${GREEN}✓${NC} Git repository detected"
+
+        BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
+        echo -e "  ${BLUE}ℹ${NC} Current branch: ${BOLD}$BRANCH${NC}"
+
+        REMOTE=$(git remote get-url origin 2>/dev/null || echo "none")
+        if [[ "$REMOTE" != "none" ]]; then
+            echo -e "  ${BLUE}ℹ${NC} Remote: $REMOTE"
+        fi
+
+        # Check if up to date (if tracking branch exists)
+        if git rev-parse @{u} > /dev/null 2>&1; then
+            # Fetch quietly to get latest remote state
+            git fetch --quiet 2>/dev/null || true
+            # Count commits behind remote
+            BEHIND=$(git rev-list HEAD..@{u} --count 2>/dev/null || echo "0")
+            if [[ "$BEHIND" -eq 0 ]]; then
+                echo -e "  ${GREEN}✓${NC} Up to date with remote"
+            else
+                echo -e "  ${YELLOW}⚠${NC} $BEHIND commit(s) behind remote"
+            fi
+        fi
+    else
+        echo -e "  ${BLUE}ℹ${NC} Not a git repository (optional)"
+    fi
+
+    echo ""
+fi
+
+# ============================================
+# Check 6: Functionality Test
+# ============================================
+echo -e "${BOLD}🧪 Functionality Test:${NC}"
+
+# Test file read permissions
+if [[ -r "$CURRENT_DIR/droids/orchestrator.md" ]]; then
+    echo -e "  ${GREEN}✓${NC} Can read droid files"
+else
+    echo -e "  ${RED}✗${NC} Cannot read droid files (permission issue?)"
+    ((ERRORS++))
+fi
+
+# Test if commands are accessible
+if [[ -f "$CURRENT_DIR/commands/orchestrator.md" ]]; then
+    if [[ -r "$CURRENT_DIR/commands/orchestrator.md" ]]; then
+        echo -e "  ${GREEN}✓${NC} Commands are accessible"
+    else
+        echo -e "  ${RED}✗${NC} Commands exist but not readable"
+        ((ERRORS++))
+    fi
+fi
+
+echo ""
+
+# ============================================
+# Summary
+# ============================================
+echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+TOTAL_ISSUES=$((ERRORS + WARNINGS))
+HEALTH_SCORE=$(( 100 - (ERRORS * 20) - (WARNINGS * 5) ))
+[[ $HEALTH_SCORE -lt 0 ]] && HEALTH_SCORE=0
+
+if [[ $ERRORS -eq 0 ]] && [[ $WARNINGS -eq 0 ]]; then
+    echo -e "${GREEN}${BOLD}✓ All checks passed!${NC}"
+    echo -e "${BOLD}🎯 Overall Health: ${GREEN}100%${NC}"
+elif [[ $ERRORS -eq 0 ]]; then
+    echo -e "${YELLOW}${BOLD}⚠ Checks completed with ${WARNINGS} warning(s)${NC}"
+    echo -e "${BOLD}🎯 Overall Health: ${YELLOW}${HEALTH_SCORE}%${NC}"
+else
+    echo -e "${RED}${BOLD}✗ Checks completed with ${ERRORS} error(s) and ${WARNINGS} warning(s)${NC}"
+    echo -e "${BOLD}🎯 Overall Health: ${RED}${HEALTH_SCORE}%${NC}"
+fi
+
+echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+
+# Show suggestions
+if [[ ${#SUGGESTIONS[@]} -gt 0 ]]; then
+    echo -e "${BOLD}💡 Suggestions:${NC}"
+    for suggestion in "${SUGGESTIONS[@]}"; do
+        echo -e "  • $suggestion"
+    done
+    echo ""
+fi
+
+# Show next steps
+if [[ $ERRORS -eq 0 ]]; then
+    echo -e "${BOLD}🚀 Ready to orchestrate!${NC}"
+    echo ""
+    echo -e "Try running:"
+    echo -e "  ${BLUE}/orchestrator \"your task here\"${NC}"
+    echo ""
+else
+    echo -e "${BOLD}🔧 Action Required:${NC}"
+    echo ""
+    echo "Fix the errors above, then run this check again:"
+    echo -e "  ${BLUE}droidos-doctor${NC}"
+    echo ""
+    echo "Or automatically fix common issues:"
+    echo -e "  ${BLUE}droidos-doctor --fix${NC}"
+    echo ""
+fi
+
+# Exit with appropriate code
+if [[ $ERRORS -gt 0 ]]; then
+    exit 1
+else
+    exit 0
+fi

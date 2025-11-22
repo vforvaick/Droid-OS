@@ -8,30 +8,42 @@ Complete orchestration system with intelligent planning, adaptive execution, and
 
 ## 🎯 Quick Start
 
-### 1. Setup Your Project
+### 1. Install Droid-OS in Your Project
 
 ```bash
 # Navigate to your project directory
 cd /path/to/your/project
 
-# Copy Factory assets to your project
-cp -r ~/.factory/droids ./droids
-cp -r ~/.factory/orchestrator ./orchestrator
-mkdir -p tasks/{backend,frontend,general}
-
-# Start Factory with the intelligent orchestrator
-factory
+# Run the interactive installer
+/path/to/Droid-OS/bin/droidos-init
 ```
 
-### 2. Use the Smart Orchestrator
+The installer will guide you through:
+1. **Project Type Detection** - Auto-detects Next.js, React, Python, etc.
+2. **Installation Mode** - Choose symlink, copy, or hybrid mode
+3. **Memory System** - Enable learning from past projects (recommended)
+4. **Command Shortcuts** - Easy access to orchestrator commands
+
+### 2. Verify Installation
 
 ```bash
-# Use the orchestrator directly within Factory
-@orchestrator "Build your project description here"
+# Check installation health
+/path/to/Droid-OS/bin/droidos-doctor
 
-# Or use manual orchestration
-mkdir -p tasks/frontend/$(date +%d-%m-%YYYY)/my-project
-touch tasks/frontend/$(date +%d-%m-%YYYY)/my-project/{research.md,plan.md,files-edited.md,verification.md
+# View detailed status (optional)
+/path/to/Droid-OS/bin/droidos-doctor --verbose
+```
+
+### 3. Start Orchestrating
+
+**For focused tasks in existing projects:**
+```bash
+/orchestrator "add pagination to users table"
+```
+
+**For greenfield/comprehensive projects:**
+```bash
+/init-orchestrator "build a marketplace app with payments"
 ```
 
 The orchestrator will:
@@ -40,6 +52,25 @@ The orchestrator will:
 - **Select** the best specialist droids for each task
 - **Coordinate** parallel execution with Factory
 - **Learn** from the project and improve future performance
+
+---
+
+## 📦 Installation Modes Explained
+
+### Symlink Mode
+- ✅ Auto-updates when you pull latest Droid-OS changes
+- ⚠️ Changes affect all projects using Droid-OS
+- **Use when:** Development, frequent Droid-OS updates
+
+### Copy Mode
+- ✅ Isolated - won't change unexpectedly
+- ⚠️ Need manual update when Droid-OS updates
+- **Use when:** Production, stability matters
+
+### Hybrid Mode (Recommended)
+- ✅ Droids auto-update (specialists improve globally)
+- ✅ Configs copied (customize per project)
+- **Use when:** Most scenarios - best of both worlds
 
 ---
 
@@ -98,33 +129,6 @@ The orchestrator will:
 - Documents failure scenarios to avoid
 - Creates templates for common project types
 - Improves strategy based on historical data
-- Scans for tech stack patterns and dependencies
-- Assesses complexity and risk factors automatically
-- Predicts potential issues before they occur
-
-### **Smart Droid Selection**
-- Ranks specialists based on expertise and success history
-- Adapts selection based on project characteristics
-- Learns from previous projects to improve choices
-- Provides fallback strategies when needed
-
-### **Adaptive Execution Strategies**
-- Optimizes between sequential, parallel, and hybrid approaches
-- Auto-detects dependencies and optimizes task ordering
-- Real-time bottleneck detection and resolution
-- Dynamic scheduling based on progress monitoring
-
-### **Proactive Problem Solving**
-- Predicts common issues and provides preemptive solutions
-- Applies learned patterns from successful projects
-- Implements security-first approaches for sensitive features
-- Suggests performance optimizations early
-
-### **Continuous Learning**
-- Tracks success patterns and learns from failures
-- Updates knowledge base with each project
-- Improves prompt generation and strategy over time
-- Applies cross-project insights to new challenges
 
 ---
 
