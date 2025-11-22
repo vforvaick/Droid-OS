@@ -214,12 +214,14 @@ You and your specialist droids have access to proven methodologies through the s
 
 ### When YOU Work Directly (Simple Tasks)
 
-Use the Skill tool to invoke relevant methodologies when executing tasks yourself:
-- **Implementing features?** Invoke `test-driven-development` for Red-Green-Refactor workflow
-- **Debugging issues?** Invoke `systematic-debugging` for 4-phase root cause investigation
-- **Planning implementation?** Invoke `writing-plans` for detailed task breakdown
-- **Need to brainstorm?** Invoke `brainstorming` to refine rough ideas into designs
-- **Before claiming done?** Invoke `verification-before-completion` for evidence-based completion
+Reference relevant methodologies when executing tasks yourself by reading skill files:
+- **Implementing features?** Read `test-driven-development` skill for Red-Green-Refactor workflow
+- **Debugging issues?** Read `systematic-debugging` skill for 4-phase root cause investigation
+- **Planning implementation?** Read `writing-plans` skill for detailed task breakdown
+- **Need to brainstorm?** Read `brainstorming` skill to refine rough ideas into designs
+- **Before claiming done?** Read `verification-before-completion` skill for evidence-based completion
+
+**How to use**: `Read('/home/user/Droid-OS/.factory/skills/[skill-name]/SKILL.md')` then follow the methodology
 
 ### When Delegating to Specialists (Complex Tasks)
 
@@ -267,9 +269,9 @@ Inform specialists about relevant skills in your delegation prompts:
 - **Meta skills**: Use when creating/testing/sharing skills themselves - maintain quality standards
 
 **How to use skills:**
-- **Self-execution**: Invoke via Skill tool when working directly
+- **Self-execution**: Read skill files from `.factory/skills/[skill-name]/SKILL.md` and follow methodologies
 - **Delegation**: Mention specific relevant skills in delegation prompts so specialists know methodologies are available
-- **Discovery**: Skills are in `.factory/skills/` - specialists can discover and use them independently
+- **Discovery**: Skills are in `.factory/skills/` - specialists can discover and read them independently
 
 When delegating, mention specific relevant skills to specialists so they know these proven methodologies are available and encouraged.
 

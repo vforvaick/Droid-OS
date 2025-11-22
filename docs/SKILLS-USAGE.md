@@ -6,11 +6,13 @@ Complete guide for using the proven methodologies system integrated into Droid-O
 
 ## 📚 What Are Skills?
 
-Skills are **proven methodologies** that droids can invoke to systematically approach common challenges:
+Skills are **proven methodologies** documented in `.factory/skills/` that droids can read and follow to systematically approach common challenges:
 - **Testing**: TDD, async testing patterns, anti-pattern avoidance
 - **Debugging**: Root cause analysis, systematic investigation, verification
 - **Collaboration**: Brainstorming, planning, code review workflows
 - **Meta**: Creating and sharing new skills
+
+**Key Point**: Skills are reference documentation, not invokable tools. Droids read skill files using the Read tool and follow the methodologies described within.
 
 ---
 
@@ -27,12 +29,13 @@ Orchestrator analyzes task
      ↓
 Options:
   A) Simple task → Orchestrator uses skills directly
-     - Invokes test-driven-development
-     - Invokes verification-before-completion
+     - Reads test-driven-development skill
+     - Follows TDD methodology
+     - Reads verification-before-completion before claiming done
 
   B) Complex task → Delegates to specialists
      - Tells backend-architect: "TDD skill available"
-     - Backend-architect self-selects and uses TDD
+     - Backend-architect reads and follows TDD skill
 ```
 
 **No decision matrix needed** - droids autonomously choose based on:
@@ -164,9 +167,10 @@ The orchestrator has **dual-use capability**:
 ```
 User: "Fix bug in authentication"
 Orchestrator:
-  - Invokes systematic-debugging skill
-  - Follows 4-phase root cause investigation
-  - Uses verification-before-completion before claiming fixed
+  - Reads systematic-debugging skill (.factory/skills/systematic-debugging/SKILL.md)
+  - Follows 4-phase root cause investigation methodology
+  - Reads verification-before-completion before claiming fixed
+  - Executes fresh verification command and provides evidence
 ```
 
 **2. Delegation (Complex Tasks)**
@@ -192,10 +196,11 @@ All 104 droids are skill-aware:
 - Check "When to Use Skills" guidance
 - Choose relevant methodologies
 
-**Invocation:**
-- Use Skill tool: `invoke skill: test-driven-development`
-- Follow skill instructions precisely
-- Report skill usage in output
+**Usage:**
+- Read skill file: `Read('.factory/skills/test-driven-development/SKILL.md')`
+- Follow methodology described in skill
+- Apply principles throughout task execution
+- Reference skill multiple times as needed
 
 ---
 
