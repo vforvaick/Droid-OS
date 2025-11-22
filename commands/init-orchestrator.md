@@ -167,7 +167,7 @@
     "avoid_mistakes": true,
     "success_templates": true,
     "failure_patterns": true
-  }
+  },
   "execution_flow": [
     {
       "step": 1,
