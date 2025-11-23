@@ -6,6 +6,63 @@ Complete orchestration system with intelligent planning, adaptive execution, and
 
 ---
 
+## 🎉 What's New – Recent Improvements
+
+### Two-Mode Orchestrator System
+We've completely redesigned the orchestrator to prevent overengineering and unnecessary codebase scanning:
+
+**Before (Old System):**
+- Single `/orchestrator` command that always did comprehensive analysis
+- Full codebase scanning even for simple tasks
+- 8-phase comprehensive workflow regardless of task complexity
+- Often over-engineered solutions for straightforward requests
+
+**After (New System):**
+- **`/orchestrator`** – Lightweight, prompt-first approach for focused tasks in existing projects
+  - Executes exactly what you ask, nothing more
+  - Minimal scanning (only reads files mentioned + immediate dependencies)
+  - Perfect for: "add pagination to users table", "fix login bug", "update API endpoint"
+
+- **`/init-orchestrator`** – Comprehensive greenfield orchestrator
+  - Full project analysis and planning
+  - Complete codebase scanning and architecture design
+  - Perfect for: "build marketplace app", "create authentication system from scratch"
+
+### Interactive Installation System
+No more complicated manual setup! New tools make installation effortless:
+
+**`droidos-init`** – Interactive Installation Wizard
+- Auto-detects your project type (Next.js, React, Python, etc.)
+- Guides you through 4 simple questions
+- Explains each option clearly (symlink vs copy vs hybrid)
+- Creates proper directory structure automatically
+- Initializes memory system for learning
+
+**`droidos-doctor`** – Health Check & Verification
+- Verifies installation was successful
+- Checks all required files and directories
+- Validates symlinks and installation mode
+- Provides health score (0-100%)
+- `--verbose` mode for detailed diagnostics
+- `--fix` mode to auto-repair common issues
+
+### Core Philosophy Change: Prompt-First Execution
+The new `/orchestrator` follows "PROMPT IS THE TRUTH" philosophy:
+- **Execute exactly what user requests** – no assumptions, no extras
+- **Minimal context gathering** – only read what's necessary
+- **No overengineering** – simple solutions for simple problems
+- **Ask when ambiguous** – clarify unclear requests instead of guessing
+
+### Improvements from Code Review
+- ✅ Cross-platform compatibility (GNU/Linux and macOS)
+- ✅ Safety checks for dangerous operations (rm -rf validation)
+- ✅ Portable date formats (no GNU-specific commands)
+- ✅ Proper JSON structure alignment across tools
+- ✅ Fixed git up-to-date checking logic
+- ✅ Clear tool naming convention (droidos-* prefix)
+
+---
+
 ## 🎯 Quick Start
 
 ### 1. Install Droid-OS in Your Project
@@ -40,17 +97,22 @@ The installer will guide you through:
 ```bash
 /orchestrator "add pagination to users table"
 ```
+- Uses prompt-first approach
+- Minimal scanning, fast execution
+- Executes exactly what you ask
 
 **For greenfield/comprehensive projects:**
 ```bash
 /init-orchestrator "build a marketplace app with payments"
 ```
+- Full project analysis and planning
+- Intelligent specialist selection
+- Comprehensive execution strategy
 
-The orchestrator will:
+Both orchestrators will:
 - **Auto-detect** your tech stack and project structure
-- **Intelligently plan** the execution strategy
 - **Select** the best specialist droids for each task
-- **Coordinate** parallel execution with Factory
+- **Coordinate** execution with Factory
 - **Learn** from the project and improve future performance
 
 ---
@@ -74,19 +136,17 @@ The orchestrator will:
 
 ---
 
-## 🚀 Smart Orchestrator Features
+## 🚀 Orchestrator Features by Mode
 
-### **Intelligent Project Analysis**
-- Auto-detects project type (React, Next.js, Python, Django, etc.)
-- Scans for tech stack patterns and dependencies
-- Assesses complexity and risk factors automatically
-- Predicts potential issues before they occur
+### **`/orchestrator` – Focused Execution Features**
+- **Prompt-First Philosophy**: Executes exactly what you request
+- **Minimal Scanning**: Only reads explicitly mentioned files + immediate dependencies
+- **Fast Execution**: No unnecessary analysis or planning overhead
+- **Clear Communication**: Asks for clarification when prompt is ambiguous
+- **Smart Specialist Selection**: Chooses the right droid for the specific task
+- **Learning Integration**: Applies lessons from past similar tasks
 
-### **Smart Droid Selection**
-- Ranks specialists based on expertise and success history
-- Adapts selection based on project characteristics
-- Learns from previous projects to improve choices
-- Provides fallback strategies when needed
+**Best for**: Bug fixes, feature additions, refactoring, updates to existing projects
 
 ### **Adaptive Execution Strategies**
 - Optimizes between sequential, parallel, and hybrid approaches
@@ -161,18 +221,23 @@ These commands provide structured workflows inspired by the [obra/superpowers](h
 - Performance metrics tracking and optimization
 - Quality assurance with automatic validation
 - Adaptive scheduling for optimal execution
+### **`/init-orchestrator` – Comprehensive Planning Features**
+- **Intelligent Project Analysis**: Auto-detects tech stack, complexity, and risk factors
+- **Strategic Planning**: Optimizes between sequential, parallel, and hybrid approaches
+- **Proactive Problem Solving**: Predicts issues and provides preemptive solutions
+- **Multi-Specialist Coordination**: Orchestrates multiple droids working in parallel
+- **Real-time Monitoring**: Progress tracking with milestone detection
+- **Error Recovery**: Auto-diagnoses failures with fallback strategies
+- **Knowledge Management**: Stores patterns and templates for future projects
 
-### **Error Recovery**
-- Auto-diagnoses execution failures with detailed analysis
-- Provides alternative strategies and fallback approaches
-- Implements graceful degradation when needed
-- Learns from failures to prevent future issues
+**Best for**: Greenfield projects, complete system rewrites, complex multi-domain features
 
-### **Knowledge Management**
-- Stores successful patterns for reuse
-- Documents failure scenarios to avoid
-- Creates templates for common project types
-- Improves strategy based on historical data
+### **Shared Features (Both Modes)**
+- **Tech Stack Detection**: Auto-identifies React, Next.js, Python, Django, etc.
+- **Smart Droid Selection**: Ranks specialists based on expertise and success history
+- **Continuous Learning**: Updates knowledge base with each project
+- **Factory Coordination**: Intelligent prompt engineering for parallel execution
+- **Quality Assurance**: Automatic validation and testing integration
 
 ---
 
@@ -372,37 +437,90 @@ echo "## Results" > tasks/backend/$(date +%d-%m-%YYYY)/project-name/verification
 
 ## 🎼 Usage Examples
 
-### **Simple Project**
+### **Focused Tasks – Use `/orchestrator`**
+
+**Add Feature to Existing Code:**
 ```bash
-/orchestrator "Add user authentication with JWT tokens"
+/orchestrator "Add pagination to the users table component"
 ```
-- Auto-detects: Next.js + TypeScript + PostgreSQL
-- Strategy: Parallel security-first approach
+- Reads: UserTable component + related imports
+- Executes: Adds pagination logic exactly as requested
+- Fast: Minimal scanning, immediate execution
+
+**Fix Bug:**
+```bash
+/orchestrator "Fix the login form validation error on empty email"
+```
+- Reads: Login form component + validation logic
+- Executes: Fixes the specific validation issue
+- Focused: Only touches the bug area
+
+**Refactor Code:**
+```bash
+/orchestrator "Extract the user profile logic into a custom hook"
+```
+- Reads: Current profile component
+- Executes: Creates custom hook, updates component
+- Clean: Simple refactor, no overengineering
+
+### **Comprehensive Projects – Use `/init-orchestrator`**
+
+**Greenfield Feature:**
+```bash
+/init-orchestrator "Add complete user authentication with JWT tokens"
+```
+- Analyzes: Full project structure, security requirements
+- Plans: Security-first approach with multiple phases
 - Coordinates: @security-auditor + @backend-architect + @frontend-developer
 
-### **Complex Multi-Domain Project**
+**Complex Multi-Domain Project:**
 ```bash
-/orchestrator "Build complete e-commerce platform with payments"
+/init-orchestrator "Build e-commerce platform with Stripe payments"
 ```
-- Auto-detects: React + Node.js + PostgreSQL + Stripe
-- Strategy: Hybrid approach with security checkpoints
+- Analyzes: Tech stack, payment integration complexity
+- Plans: Hybrid approach with security checkpoints
 - Coordinates: 6+ specialist droids with intelligent scheduling
 
-### **Performance Optimization**
+**System-Wide Optimization:**
 ```bash
-/orchestrator "Optimize slow database queries and API response times"
+/init-orchestrator "Optimize database queries and API performance across the app"
 ```
-- Auto-analyzes: Database schema, API endpoints, query patterns
-- Strategy: Sequential with performance testing
+- Analyzes: Full database schema, all API endpoints, query patterns
+- Plans: Sequential with comprehensive performance testing
 - Coordinates: @database-admin + @backend-architect + @performance-engineer
 
 ---
 
-## 🧠 How the Smart Orchestrator Works
+## 🧠 How the Orchestrators Work
 
-### **Execution Flow:**
+### **`/orchestrator` – Focused Execution Flow:**
 ```
-/orchestrator "Your project description"
+/orchestrator "Add pagination to users table"
+    ↓
+1. Understand Prompt (Quick)
+   - Parse exactly what user requested
+   - Identify mentioned files/components
+   - Check for ambiguity
+    ↓
+2. Minimal Context Gathering
+   - Read explicitly mentioned files only
+   - Read immediate dependencies (imports)
+   - Skip full codebase scanning
+    ↓
+3. Smart Execution
+   - Choose best specialist droid for this specific task
+   - Create focused prompt with exact requirements
+   - Execute through Factory
+    ↓
+4. Verify & Learn
+   - Validate changes work as requested
+   - Update knowledge base with pattern
+   - Document what was changed
+```
+
+### **`/init-orchestrator` – Comprehensive Planning Flow:**
+```
+/init-orchestrator "Build e-commerce platform with payments"
     ↓
 1. Project Analysis (Automatic)
    - Scan project files for tech stack detection
@@ -435,31 +553,20 @@ echo "## Results" > tasks/backend/$(date +%d-%m-%YYYY)/project-name/verification
    - Generate comprehensive documentation
 ```
 
-### **Smart Features in Action:**
+### **When to Use Which Mode:**
 
-**Project Type Detection:**
-```bash
-Input: "Build a blog with comments"
-Analysis: package.json → Next.js + TypeScript + MDX
-Strategy: Parallel frontend + backend + content
-Optimization: Include SEO and performance considerations
-```
+**Use `/orchestrator` when:**
+- ✅ You know exactly what needs to be done
+- ✅ Working with existing code in a stable project
+- ✅ Simple, focused tasks (bug fix, feature addition, refactor)
+- ✅ You want fast execution without overhead
 
-**Risk Prediction:**
-```bash
-Input: "Payment processing system"
-Prediction: High risk - PCI compliance, security complexity
-Prevention: Security-first approach, early audit, multiple payment gateways
-Coordination: Security auditor involved from Phase 1
-```
-
-**Learning Integration:**
-```bash
-Previous Project: "JWT authentication system" → Success pattern: "Security-first approach"
-Current Project: "User authentication" 
-Application: Apply security-first pattern, early security audit
-Result: Avoids common security issues, improves success rate
-```
+**Use `/init-orchestrator` when:**
+- ✅ Starting from scratch (greenfield)
+- ✅ Complex multi-domain features
+- ✅ Need comprehensive planning and analysis
+- ✅ System-wide changes affecting multiple areas
+- ✅ High-risk features (payments, auth, security)
 
 ---
 
